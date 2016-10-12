@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const util = require('util');
 const User = require('../models/User');
 
 exports.login = (req, res) => {
@@ -8,31 +7,57 @@ exports.login = (req, res) => {
 
   const errors = req.validationErrors();
   if (errors) {
-    const errorsString = util.inspect(errors);
-    res.send(`Error: ${errorsString}`);
-    return;
+    return res.json({
+      code: 400,
+      message: 'Validation Failed',
+      errors,
+    });
   }
 
-  User.findOne({
-    username: req.body.user,
-  }, (err, user) => {
-    if (err) throw err;
+  User.findOne({ username: req.body.user }, (err, user) => {
+    if (err) {
+      return res.status(500).json({
+        code: 500,
+        message: 'Something bad happened :(',
+      });
+      // Todo print error to log file
+    }
+
+    if (user === null) {
+      return res.json({
+        code: 401,
+        message: 'Invalid username or password',
+      });
+    }
 
     user.comparePassword(req.body.password, (err, isMatch) => {
-      if (err) throw err;
-
-      if (isMatch) {
-        const token = jwt.sign({
-          user: user.username,
-        }, process.env.JWT_SECRET);
-
-        res.send(token);
-      } else {
-        res.send('Login failed');
+      if (err) {
+        return res.status(500).json({
+          code: 500,
+          message: 'Something bad happened :(',
+        });
+        // Todo print error to log file
       }
+
+      if (!isMatch) {
+        return res.status(401).json({
+          code: 401,
+          message: 'Invalid username or password',
+        });
+      }
+
+      const token = jwt.sign({
+        user: user.username,
+      }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+      return res.json({
+        message: 'Login successful',
+        token,
+      });
     });
   });
 };
+
 
 exports.signup = (req, res) => {
   req.checkBody('user', 'User cannot be blank').notEmpty();
@@ -40,24 +65,45 @@ exports.signup = (req, res) => {
 
   const errors = req.validationErrors();
   if (errors) {
-    const errorsString = util.inspect(errors);
-    res.send(`Error: ${errorsString}`);
-    return;
+    return res.json({
+      code: 400,
+      message: 'Validation Failed',
+      errors,
+    });
   }
 
-  const user = new User({
-    username: req.body.user,
-    password: req.body.password,
-  });
-
-  // todo check if user exsits
-
-  user.save((error) => {
-    if (error) {
-      res.send('failure');
-      return;
+  // Check if user allready exists
+  User.findOne({ username: req.body.user }, (err, user) => {
+    if (err) {
+      return res.status(500).json({
+        code: 500,
+        message: 'Something bad happened :(',
+      });
+      // Todo print error to log file
     }
 
-    res.send(`User ${user.name} added successfully`);
+    if (user !== null) {
+      return res.json({
+        message: 'User allready exists',
+      });
+    }
+
+    const newUser = new User({
+      username: req.body.user,
+      password: req.body.password,
+    });
+
+    newUser.save((error) => {
+      if (error) {
+        return res.status(500).json({
+          code: 500,
+          message: 'Something bad happened :(',
+        });
+      }
+
+      return res.json({
+        message: `User ${newUser.username} added successfully`,
+      });
+    });
   });
 };
