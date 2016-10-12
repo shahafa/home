@@ -3,6 +3,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const lusca = require('lusca');
 const expressValidator = require('express-validator');
+const chalk = require('chalk');
 
 function expressConfig(app) {
   // Sets the app port
@@ -47,6 +48,8 @@ function expressConfig(app) {
   // consider at later stage
   // app.use(flash());
   // app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+
+  console.log('%s Express configured successfully', chalk.green('✓'));
 }
 
 module.exports = expressConfig;
