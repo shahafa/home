@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
 }, { timestamps: true });
 
+
 userSchema.pre('save', function preSave(next) {
   const user = this;
 
@@ -25,6 +26,7 @@ userSchema.pre('save', function preSave(next) {
     next();
   });
 });
+
 
 userSchema.methods.comparePassword = function comparePassword(candidatePassword, cb) {
   const pass = this.password;
