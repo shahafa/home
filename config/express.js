@@ -2,6 +2,7 @@ const compression = require('compression');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const lusca = require('lusca');
+const expressValidator = require('express-validator');
 
 function expressConfig(app) {
   // Sets the app port
@@ -12,6 +13,9 @@ function expressConfig(app) {
 
   // HTTP request logger
   app.use(logger('dev'));
+
+  // An express.js middleware for node-validator
+  app.use(expressValidator());
 
   // Parses json, A new body object containing the parsed data is populated on
   // the request object after the middleware
@@ -41,7 +45,6 @@ function expressConfig(app) {
   app.disable('x-powered-by');
 
   // consider at later stage
-  // app.use(expressValidator());
   // app.use(flash());
   // app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 }
