@@ -16,4 +16,4 @@ routesConfig(app);
 
 app.listen(app.get('port'));
 
-console.log('%s Home server listening on port %d in %s mode.', chalk.green('✓'), app.get('port'), app.get('env'));
+console.log(chalk.bold(`${chalk.green('✓')} Server listening on port ${app.get('port')} in ${app.get('env')} mode.`));
