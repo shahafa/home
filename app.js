@@ -1,12 +1,10 @@
+require('dotenv').config();
+
 const express = require('express');
-const dotenv = require('dotenv');
 const chalk = require('chalk');
 const expressConfig = require('./config/express');
 const routesConfig = require('./config/routes');
 const database = require('./config/database');
-
-// Load environment variables from .env file
-dotenv.load();
 
 database.connect()
 .catch(() => {

@@ -1,12 +1,11 @@
+require('dotenv').config({ path: '.env.test' });
+
 const database = require('../config/database');
 const userController = require('../controllers/user');
-const dotenv = require('dotenv');
 const { ERROR_USER_ALLREADY_EXISTS, ERROR_INVALID_USERNAME_OR_PASSWORD,
         ERROR_USER_NOT_FOUND } = require('../lib/errors.js');
 
 beforeAll((done) => {
-  dotenv.load();
-
   database.connect().then(() => done())
   .catch(err => done.fail(err));
 });
@@ -26,7 +25,8 @@ it('should not create user with the same username', () =>
 it('should generate a token', () =>
   userController.generateToken('testuser1', 'testpassword1')
   .then((result) => {
-    expect(result); // TODO improve
+    expect(result).not.toBeNull();
+    expect(result).not.toBeUndefined();
   })
 );
 

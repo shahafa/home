@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { Base64 } = require('js-base64');
 const User = require('../models/User');
 const { ERROR_VALIDATION_FAILED, ERROR_USER_ALLREADY_EXISTS,
         ERROR_INVALID_USERNAME_OR_PASSWORD, ERROR_SOMTHING_BAD_HAPPEND,
@@ -102,7 +103,10 @@ function login(req, res) {
     return res.json(error);
   }
 
-  generateToken(req.body.user, req.body.password)
+  const username = req.body.user;
+  const password = Base64.decode(req.body.password);
+
+  generateToken(username, password)
   .then(token => res.json({
     message: 'Login successful',
     token,
@@ -121,8 +125,11 @@ function signup(req, res) {
     return res.json(error);
   }
 
-  addUser(req.body.user, req.body.password)
-  .then(() => res.json({ message: `User ${req.body.username} added successfully` }))
+  const username = req.body.user;
+  const password = Base64.decode(req.body.password);
+
+  addUser(username, password)
+  .then(() => res.json({ message: `User ${req.body.user} added successfully` }))
   .catch(error => res.json(error));
 }
 
