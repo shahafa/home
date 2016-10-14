@@ -3,12 +3,15 @@ const dotenv = require('dotenv');
 const chalk = require('chalk');
 const expressConfig = require('./config/express');
 const routesConfig = require('./config/routes');
-const databaseConfig = require('./config/database');
+const database = require('./config/database');
 
 // Load environment variables from .env file
 dotenv.load();
 
-databaseConfig();
+database.connect()
+.catch(() => {
+  process.exit();
+});
 
 const app = express();
 expressConfig(app);
