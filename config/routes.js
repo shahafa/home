@@ -12,7 +12,6 @@ function routesConfig(app) {
 
   app.use('/graphql', graphqlHTTP({
     schema: homeSchema,
-    rootValue: root,
     graphiql: true,
   }));
 
