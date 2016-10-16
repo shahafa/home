@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken');
 const { ERROR_USER_ALLREADY_EXISTS,
         ERROR_USER_NOT_FOUND,
         ERROR_SOMTHING_BAD_HAPPEND,
-        ERROR_INVALID_USERNAME_OR_PASSWORD } = require('../lib/errors.js');
+        ERROR_INVALID_USERNAME_OR_PASSWORD,
+        ERROR_VALIDATION_FAILED } = require('../lib/errors.js');
 
 const saltRounds = 10;
 
@@ -51,6 +52,11 @@ UserSchema.methods.comparePassword = function(candidatePassword) {
 
 UserSchema.statics.get = function(username) {
   return new Promise((resolve, reject) => {
+    if (!username) {
+      reject(ERROR_VALIDATION_FAILED);
+      return;
+    }
+
     this.findOne({ username }).exec()
     .then((user) => {
       // if user doesn't exists in DB
@@ -82,6 +88,11 @@ UserSchema.statics.getAll = function() {
 
 UserSchema.statics.add = function(username, password) {
   return new Promise((resolve, reject) => {
+    if (!username || !password) {
+      reject(ERROR_VALIDATION_FAILED);
+      return;
+    }
+
     // Check if user allready exists
     this.findOne({ username }).exec()
     .then((user) => {
@@ -110,6 +121,11 @@ UserSchema.statics.add = function(username, password) {
 
 UserSchema.statics.delete = function(username) {
   return new Promise((resolve, reject) => {
+    if (!username) {
+      reject(ERROR_VALIDATION_FAILED);
+      return;
+    }
+
     // Check if user allready exists
     this.findOne({ username }).exec()
     .then((user) => {
@@ -133,6 +149,11 @@ UserSchema.statics.delete = function(username) {
 
 UserSchema.statics.getToken = function(username, password) {
   return new Promise((resolve, reject) => {
+    if (!username || !password) {
+      reject(ERROR_VALIDATION_FAILED);
+      return;
+    }
+
     this.get(username).then((user) => {
       user.comparePassword(password).then((passwordMatch) => {
         if (!passwordMatch) {

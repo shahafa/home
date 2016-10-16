@@ -5,6 +5,7 @@ const { ERROR_VALIDATION_FAILED } = require('../lib/errors.js');
 function login(req, res) {
   req.checkBody('user', 'User cannot be blank').notEmpty();
   req.checkBody('password', 'Password cannot be blank').notEmpty();
+  req.checkBody('password', 'Password needs to be in Base64 format').isBase64();
 
   const errors = req.validationErrors();
   if (errors) {
@@ -27,6 +28,7 @@ function login(req, res) {
 function signup(req, res) {
   req.checkBody('user', 'User cannot be blank').notEmpty();
   req.checkBody('password', 'Password cannot be blank').notEmpty();
+  req.checkBody('password', 'Password needs to be in Base64 format').isBase64();
 
   const errors = req.validationErrors();
   if (errors) {
