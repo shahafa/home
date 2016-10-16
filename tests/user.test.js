@@ -1,8 +1,9 @@
 require('dotenv').config({ path: '.env.test' });
 
 const database = require('../config/database');
-const userController = require('../controllers/user');
-const { ERROR_USER_ALLREADY_EXISTS, ERROR_INVALID_USERNAME_OR_PASSWORD,
+const User = require('../models/User');
+const { ERROR_USER_ALLREADY_EXISTS,
+        ERROR_INVALID_USERNAME_OR_PASSWORD,
         ERROR_USER_NOT_FOUND } = require('../lib/errors.js');
 
 beforeAll((done) => {
@@ -11,19 +12,19 @@ beforeAll((done) => {
 });
 
 it('should create a new user', () =>
-  userController.addUser('testuser1', 'testpassword1')
+  User.add('testuser1', 'testpassword1')
   .then((result) => {
     expect(result).toEqual(true);
   })
 );
 
-it('should not create user with the same username', () =>
-  userController.addUser('testuser1', 'testpassword1')
+it('should not create user if username allready exists', () =>
+  User.add('testuser1', 'testpassword1')
   .catch(error => expect(error).toEqual(ERROR_USER_ALLREADY_EXISTS))
 );
 
-it('should generate a token', () =>
-  userController.generateToken('testuser1', 'testpassword1')
+it('should generate a token if username and password are valid', () =>
+  User.getToken('testuser1', 'testpassword1')
   .then((result) => {
     expect(result).not.toBeNull();
     expect(result).not.toBeUndefined();
@@ -31,24 +32,24 @@ it('should generate a token', () =>
 );
 
 it('should not generate token if username doesn\'t exists', () =>
-  userController.generateToken('testuser2', 'testpassword2')
-  .catch(error => expect(error).toEqual(ERROR_INVALID_USERNAME_OR_PASSWORD))
+  User.getToken('testuser2', 'testpassword2')
+  .catch(error => expect(error).toEqual(ERROR_USER_NOT_FOUND))
 );
 
 it('should not generate token if password doesn\'t match username', () =>
-  userController.generateToken('testuser1', 'testpassword2')
+  User.getToken('testuser1', 'testpassword2')
   .catch(error => expect(error).toEqual(ERROR_INVALID_USERNAME_OR_PASSWORD))
 );
 
 it('should delete user', () =>
-  userController.deleteUser('testuser1')
+  User.delete('testuser1')
   .then((result) => {
     expect(result).toEqual(true);
   })
 );
 
 it('should not delete user if user doesn\'t exists', () =>
-  userController.deleteUser('testuser1')
+  User.delete('testuser1')
   .catch(error => expect(error).toEqual(ERROR_USER_NOT_FOUND))
 );
 
