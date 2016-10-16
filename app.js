@@ -7,7 +7,10 @@ const routesConfig = require('./config/routes');
 const database = require('./config/database');
 
 database.connect()
-.catch(() => {
+.then(() => console.log('%s Database connection established!', chalk.green('✓')))
+.catch((error) => {
+  console.log('%s Database connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  console.log(error);
   process.exit();
 });
 

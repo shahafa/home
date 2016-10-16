@@ -1,6 +1,7 @@
 require('dotenv').config({ path: '.env.test' });
 
 const database = require('../config/database');
+const chalk = require('chalk');
 const User = require('../models/User');
 const { ERROR_USER_ALLREADY_EXISTS,
         ERROR_INVALID_USERNAME_OR_PASSWORD,
@@ -8,7 +9,11 @@ const { ERROR_USER_ALLREADY_EXISTS,
 
 beforeAll((done) => {
   database.connect().then(() => done())
-  .catch(err => done.fail(err));
+  .catch((error) => {
+    console.log('%s Database connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+    console.log(error);
+    done.fail(error);
+  });
 });
 
 it('should create a new user', () =>
