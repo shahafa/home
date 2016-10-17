@@ -1,6 +1,7 @@
 // Import type helpers from graphql-js
 const { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull, GraphQLID } = require('graphql');
 const User = require('../models/User');
+const Apartment = require('../models/Apartment');
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -10,6 +11,18 @@ const UserType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLID),
     },
     username: {
+      type: GraphQLString,
+    },
+  }),
+});
+
+const ApartmentType = new GraphQLObjectType({
+  name: 'Apartment',
+  fields: () => ({
+    userId: {
+      type: GraphQLString,
+    },
+    city: {
       type: GraphQLString,
     },
   }),
@@ -25,6 +38,10 @@ const RootQueryType = new GraphQLObjectType({
     users: {
       type: new GraphQLList(UserType),
       resolve: () => User.getAll(),
+    },
+    apartments: {
+      type: new GraphQLList(ApartmentType),
+      resolve: (post, args, context, { rootValue }) => Apartment.getById(rootValue.userid),
     },
   },
 });
