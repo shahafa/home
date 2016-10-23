@@ -3,16 +3,16 @@ const {
   GraphQLObjectType,
 } = require('graphql');
 
+const me = require('./queries/me.js');
 const users = require('./queries/users.js');
-const apartments = require('./queries/apartments.js');
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'HomeAPI',
     description: 'Home API',
     fields: {
+      me,
       users,
-      apartments,
     },
   }),
 });

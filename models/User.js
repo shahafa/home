@@ -50,7 +50,7 @@ UserSchema.methods.comparePassword = function(candidatePassword) {
   });
 };
 
-UserSchema.statics.get = function(username) {
+UserSchema.statics.getByUserName = function(username) {
   return new Promise((resolve, reject) => {
     if (!username) {
       reject(ERROR_VALIDATION_FAILED);
@@ -58,6 +58,30 @@ UserSchema.statics.get = function(username) {
     }
 
     this.findOne({ username }).exec()
+    .then((user) => {
+      // if user doesn't exists in DB
+      if (!user) {
+        reject(ERROR_USER_NOT_FOUND);
+        return;
+      }
+
+      resolve(user);
+    })
+    .catch((error) => {
+      console.log(`Error: ${error}`);
+      reject(ERROR_SOMTHING_BAD_HAPPEND);
+    });
+  });
+};
+
+UserSchema.statics.getById = function(userId) {
+  return new Promise((resolve, reject) => {
+    if (!userId) {
+      reject(ERROR_VALIDATION_FAILED);
+      return;
+    }
+
+    this.findOne({ _id: userId }).exec()
     .then((user) => {
       // if user doesn't exists in DB
       if (!user) {
@@ -154,7 +178,7 @@ UserSchema.statics.getToken = function(username, password) {
       return;
     }
 
-    this.get(username).then((user) => {
+    this.getByUserName(username).then((user) => {
       user.comparePassword(password).then((passwordMatch) => {
         if (!passwordMatch) {
           reject(ERROR_INVALID_USERNAME_OR_PASSWORD);
