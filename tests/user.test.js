@@ -11,7 +11,6 @@ beforeAll((done) => {
   database.connect().then(() => done())
   .catch((error) => {
     console.log('%s Database connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-    console.log(error);
     done.fail(error);
   });
 });
