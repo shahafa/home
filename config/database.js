@@ -1,22 +1,23 @@
+const chalk = require('chalk');
 const mongoose = require('mongoose');
 
 exports.connect = () => {
-  const connectPromise = new Promise((resolve, reject) => {
-    mongoose.Promise = global.Promise;
-    mongoose.connect(process.env.MONGODB_URI);
+  mongoose.Promise = global.Promise;
+  mongoose.connect(process.env.MONGODB_URI);
 
-    mongoose.connection.on('open', () => {
-      resolve(true);
-    });
-
-    mongoose.connection.on('error', (error) => {
-      reject(error);
-    });
+  mongoose.connection.on('open', () => {
+    console.log('%s Database connection established!', chalk.green('✓'));
   });
 
-  return connectPromise;
+  mongoose.connection.on('error', () => {
+    console.log('%s Database connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+    process.exit();
+  });
 };
 
 exports.disconnect = () => {
-  mongoose.connection.close();
+  // mongoose.connection.close();
+  mongoose.connection.close(() => {
+    console.log('Database connection closed');
+  });
 };
