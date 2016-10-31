@@ -18,6 +18,6 @@ exports.connect = () => {
 exports.disconnect = () => {
   // mongoose.connection.close();
   mongoose.connection.close(() => {
-    console.log('Database connection closed');
+    console.log('%s Database connection closed', chalk.blue('!'));
   });
 };
