@@ -4,6 +4,7 @@ const express = require('express');
 const chalk = require('chalk');
 const expressConfig = require('./config/express');
 const routesConfig = require('./config/routes');
+const logger = require('./config/logger');
 const database = require('./config/database');
 
 database.connect();
@@ -15,3 +16,4 @@ routesConfig(app);
 app.listen(app.get('port'));
 
 console.log(chalk.bold(`${chalk.green('✓')} Server listening on port ${app.get('port')} in ${app.get('env')} mode.`));
+logger.info(`Server listening on port ${app.get('port')} in ${app.get('env')} mode.`);
