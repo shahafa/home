@@ -2,6 +2,9 @@
 /* eslint space-before-function-paren: "off" */
 
 const mongoose = require('mongoose');
+const moment = require('moment');
+
+const QUERY_COUNT = 20;
 
 const AdSchema = new mongoose.Schema({
   id: { type: String, required: true, index: { unique: true } },
@@ -32,17 +35,32 @@ const AdSchema = new mongoose.Schema({
 
   priceChanged: { type: Boolean, default: false },
   isRelevant: { type: Boolean, default: true },
+  new: { type: Boolean, default: true },
   comment: String,
 }, { timestamps: true });
 
-
-AdSchema.statics.get = async function(homeId) {
-  const home = await this.findOne({ id: homeId }).exec();
+AdSchema.statics.get = async function(page) {
+  const home = await this.find({}).skip(page * QUERY_COUNT).limit(QUERY_COUNT).exec();
   if (!home) {
     return false;
   }
 
   return home;
+};
+
+AdSchema.statics.getDayAds = async function(dayDate) {
+  const ads = await this.find({
+    updatedAt: {
+      $gte: moment(dayDate).startOf('day'),
+      $lte: moment(dayDate).endOf('day'),
+    },
+  }).exec();
+
+  if (!ads) {
+    return false;
+  }
+
+  return ads;
 };
 
 AdSchema.statics.add = async function(home) {

@@ -4,7 +4,7 @@
   "description": "Home API",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
+    "dev": "nodemon --harmony-async-await app.js",
     "start": "node --harmony-async-await app.js",
     "test": "jest",
     "lint": "./node_modules/eslint/bin/eslint.js ."
@@ -15,7 +15,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.15.2",
     "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
     "bunyan": "^1.8.4",
