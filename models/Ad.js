@@ -29,6 +29,7 @@ const AdSchema = new mongoose.Schema({
   neighborhood: String,
   street: String,
   street2: String,
+  tivuch: Boolean,
 
   contactName: String,
   phone: String,

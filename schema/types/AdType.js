@@ -62,6 +62,9 @@ const AdType = new GraphQLObjectType({
     street2: {
       type: GraphQLString,
     },
+    tivuch: {
+      type: GraphQLBoolean,
+    },
     contactName: {
       type: GraphQLString,
     },
