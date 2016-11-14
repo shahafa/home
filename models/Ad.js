@@ -41,13 +41,17 @@ const AdSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 AdSchema.statics.get = async function(page) {
-  const home = await this.find({}).skip(page * QUERY_COUNT).limit(QUERY_COUNT).exec();
-  if (!home) {
+  const ads = await this.find({}).skip(page * QUERY_COUNT).limit(QUERY_COUNT).exec();
+  if (!ads) {
     return false;
   }
 
-  return home;
+  return ads;
 };
+
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 AdSchema.statics.getAdsOfDay = async function(date) {
   const ads = await this.find({
@@ -60,6 +64,8 @@ AdSchema.statics.getAdsOfDay = async function(date) {
   if (!ads) {
     return false;
   }
+
+  // await timeout(3000);
 
   return ads;
 };
