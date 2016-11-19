@@ -49,10 +49,6 @@ AdSchema.statics.get = async function(page) {
   return ads;
 };
 
-function timeout(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 AdSchema.statics.getAdsOfDay = async function(date) {
   const ads = await this.find({
     updatedAt: {
@@ -64,8 +60,6 @@ AdSchema.statics.getAdsOfDay = async function(date) {
   if (!ads) {
     return false;
   }
-
-  // await timeout(3000);
 
   return ads;
 };
