@@ -1,14 +1,15 @@
 const chalk = require('chalk');
 const jwt = require('express-jwt');
 const graphqlHTTP = require('express-graphql');
-const userController = require('../controllers/user');
 const schema = require('../schema/schema');
 
-function routesConfig(app) {
-  app.post('/login', userController.login);
-  app.post('/signup', userController.signup);
+const authenticate = jwt({
+  secret: new Buffer(process.env.AUTH0_SECRET, 'base64'),
+  audience: process.env.AUTH0_CLIENT_ID,
+});
 
-  app.use('/graphql', jwt({ secret: process.env.JWT_SECRET }), graphqlHTTP(request => ({
+function routesConfig(app) {
+  app.use('/graphql', authenticate, graphqlHTTP(request => ({
     schema,
     rootValue: { userid: request.user.userid },
     graphiql: true,
