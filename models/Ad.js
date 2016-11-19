@@ -52,8 +52,8 @@ AdSchema.statics.get = async function(page) {
 AdSchema.statics.getAdsOfDay = async function(date) {
   const ads = await this.find({
     updatedAt: {
-      $gte: moment(date).startOf('day'),
-      $lte: moment(date).endOf('day'),
+      $gte: moment(date),
+      $lt: moment(date).add(24, 'hours'),
     },
   }).exec();
 
