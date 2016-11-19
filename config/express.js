@@ -1,3 +1,5 @@
+const express = require('express');
+const path = require('path');
 const compression = require('compression');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -45,9 +47,10 @@ function expressConfig(app) {
   // It can be removed safely
   app.disable('x-powered-by');
 
+  app.use(express.static(path.join(__dirname, '/../public'), { maxAge: 31557600000 }));
+
   // consider at later stage
   // app.use(flash());
-  // app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
   console.log('%s Express configured successfully', chalk.green('✓'));
 }

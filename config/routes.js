@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const path = require('path');
 const jwt = require('express-jwt');
 const graphqlHTTP = require('express-graphql');
 const schema = require('../schema/schema');
@@ -14,6 +15,8 @@ function routesConfig(app) {
     rootValue: { userid: request.user.userid },
     graphiql: true,
   })));
+
+  app.use('/', (req, res) => res.sendFile(path.join(__dirname, '/../public/index.html')));
 
   console.log('%s Routes configured successfully', chalk.green('✓'));
 }
