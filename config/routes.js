@@ -1,8 +1,7 @@
 const chalk = require('chalk');
 const path = require('path');
 const jwt = require('express-jwt');
-const graphqlHTTP = require('express-graphql');
-const schema = require('../schema/schema');
+const adsController = require('../controllers/ads');
 const filterController = require('../controllers/filter');
 
 const authenticate = jwt({
@@ -11,12 +10,7 @@ const authenticate = jwt({
 });
 
 function routesConfig(app) {
-  app.use('/graphql', authenticate, graphqlHTTP(request => ({
-    schema,
-    rootValue: { userid: request.user.userid },
-    graphiql: true,
-  })));
-
+  app.use('/api/getAds', authenticate, adsController.getAds);
   app.use('/api/addFilter', authenticate, filterController.addFilter);
   app.use('/api/getFilters', authenticate, filterController.getFilters);
   app.use('/api/deleteFilter', authenticate, filterController.deleteFilters);
