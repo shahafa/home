@@ -3,6 +3,7 @@ const path = require('path');
 const jwt = require('express-jwt');
 const graphqlHTTP = require('express-graphql');
 const schema = require('../schema/schema');
+const filterController = require('../controllers/filter');
 
 const authenticate = jwt({
   secret: new Buffer(process.env.AUTH0_SECRET, 'base64'),
@@ -15,6 +16,10 @@ function routesConfig(app) {
     rootValue: { userid: request.user.userid },
     graphiql: true,
   })));
+
+  app.use('/api/addFilter', authenticate, filterController.addFilter);
+  app.use('/api/getFilters', authenticate, filterController.getFilters);
+  app.use('/api/deleteFilter', authenticate, filterController.deleteFilters);
 
   app.use('/', (req, res) => res.sendFile(path.join(__dirname, '/../public/index.html')));
 
