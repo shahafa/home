@@ -46,20 +46,23 @@ function buildFilterQuery(filter) {
 
 async function getAds(req, res) {
   const date = req.body.date;
+  const filterActive = req.body.filterActive;
   const userId = req.user.sub;
-  const filters = await Filter.getFilters(userId);
 
   let query = {};
 
-  if (filters.length === 1) {
-    query = buildFilterQuery(filters[0].toObject());
-  } else if (filters.length > 1) {
-    const filterQuery = [];
-    for (const filter of filters) {
-      filterQuery.push(buildFilterQuery(filter.toObject()));
-    }
+  if (filterActive) {
+    const filters = await Filter.getFilters(userId);
+    if (filters.length === 1) {
+      query = buildFilterQuery(filters[0].toObject());
+    } else if (filters.length > 1) {
+      const filterQuery = [];
+      for (const filter of filters) {
+        filterQuery.push(buildFilterQuery(filter.toObject()));
+      }
 
-    query = { $or: filterQuery };
+      query = { $or: filterQuery };
+    }
   }
 
   const ads = await Ad.getAdsByDate(date, query);
