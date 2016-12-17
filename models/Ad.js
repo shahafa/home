@@ -14,8 +14,9 @@ const AdSchema = new mongoose.Schema({
   url: String,
   images: [String],
 
-  price: [mongoose.Schema.Types.Mixed],
+  priceHistory: [mongoose.Schema.Types.Mixed],
 
+  price: Number,
   floor: Number,
   rooms: Number,
   meter: Number,
@@ -41,7 +42,11 @@ const AdSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 AdSchema.statics.get = async function(page) {
-  const ads = await this.find({}).skip(page * QUERY_COUNT).limit(QUERY_COUNT).exec();
+  const ads = await this.find({})
+                        .skip(page * QUERY_COUNT)
+                        .limit(QUERY_COUNT)
+                        .sort('-updatedAt')
+                        .exec();
   if (!ads) {
     return false;
   }
@@ -49,13 +54,18 @@ AdSchema.statics.get = async function(page) {
   return ads;
 };
 
-AdSchema.statics.getAdsByDate = async function(date) {
-  const ads = await this.find({
+AdSchema.statics.getAdsByDate = async function(date, filter = {}) {
+  const queryFilter = Object.assign(filter, {
     updatedAt: {
       $gte: moment(date),
       $lt: moment(date).add(24, 'hours'),
     },
-  }).exec();
+  });
+
+  console.log(queryFilter);
+  const ads = await this.find(queryFilter)
+                        .sort('-updatedAt')
+                        .exec();
 
   if (!ads) {
     return false;
