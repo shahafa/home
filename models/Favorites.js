@@ -17,7 +17,9 @@ FavoritesSchema.statics.get = async function (userId) {
     return [];
   }
 
-  const favorites = await Ad.find({ id: { $in: favoritesIds } }).exec();
+  const favorites = await Ad.find({ id: { $in: favoritesIds } })
+                            .sort('-updatedAt')
+                            .exec();
   if (!favorites) {
     return [];
   }
