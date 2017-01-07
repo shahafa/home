@@ -12,19 +12,24 @@ const FavoritesSchema = new mongoose.Schema({
 });
 
 FavoritesSchema.statics.get = async function (userId) {
-  const favoritesIds = (await this.findOne({ userId })).favorites;
-  if (!favoritesIds || favoritesIds.length === 0) {
+  const favoritesObject = await this.findOne({ userId });
+  if (!favoritesObject) {
     return [];
   }
 
-  const favorites = await Ad.find({ id: { $in: favoritesIds } })
+  const favoritesList = favoritesObject.favorites;
+  if (!favoritesList || favoritesList.length === 0) {
+    return [];
+  }
+
+  const favoritesAds = await Ad.find({ id: { $in: favoritesList } })
                             .sort('-updatedAt')
                             .exec();
-  if (!favorites) {
+  if (!favoritesAds) {
     return [];
   }
 
-  return favorites;
+  return favoritesAds;
 };
 
 FavoritesSchema.statics.add = async function (userId, favoriteId) {

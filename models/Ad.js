@@ -2,6 +2,7 @@
 /* eslint space-before-function-paren: "off" */
 
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const AdSchema = new mongoose.Schema({
   id: { type: String, required: true, index: { unique: true } },
@@ -47,6 +48,25 @@ AdSchema.statics.get = async function(homeId) {
   }
 
   return home;
+};
+
+AdSchema.statics.getAdsByDate = async function(date, filter = {}) {
+  const queryFilter = Object.assign(filter, {
+    updatedAt: {
+      $gte: moment(date),
+      $lt: moment(date).add(24, 'hours'),
+    },
+  });
+
+  const ads = await this.find(queryFilter)
+                        .sort('-updatedAt')
+                        .exec();
+
+  if (!ads) {
+    return false;
+  }
+
+  return ads;
 };
 
 AdSchema.statics.add = async function(home) {
