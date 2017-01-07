@@ -10,13 +10,13 @@ exports.connect = () => {
   });
 
   mongoose.connection.on('error', () => {
-    console.log('%s Database connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+    console.log('%s Database connection error. Please make sure MongoDB is running.', chalk.red('⚠︎'));
     process.exit();
   });
 };
 
 exports.disconnect = () => {
   mongoose.connection.close(() => {
-    console.log('%s Database connection closed', chalk.blue('!'));
+    console.log('%s Database connection closed', chalk.red('✗'));
   });
 };

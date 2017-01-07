@@ -196,7 +196,7 @@ async function scanAds() {
 
 async function scanYad2() {
   logger.info('Yad2 scan started');
-  console.log('Yad2 scan started, for more info see log file');
+  console.log('🚀 Yad2 scan started, for more info see log file');
 
   database.connect();
 
@@ -209,7 +209,7 @@ async function scanYad2() {
 
   database.disconnect();
 
-  console.log('Yad2 scan completed');
+  console.log('👍 Yad2 scan completed');
   logger.info('Yad2 scan completed');
 }
 
