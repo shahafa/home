@@ -13,7 +13,7 @@ const FilterSchema = new mongoose.Schema({
   renovated: Boolean,
   elevator: Boolean,
   parking: Boolean,
-  userId: String,
+  userId: { type: String, index: true },
 }, { timestamps: true });
 
 FilterSchema.statics.add = async function(filter) {

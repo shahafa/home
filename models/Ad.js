@@ -6,8 +6,8 @@ const moment = require('moment');
 
 const AdSchema = new mongoose.Schema({
   id: { type: String, required: true, index: { unique: true } },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now, index: true },
+  updatedAt: { type: Date, default: Date.now, index: true },
 
   title: String,
   description: String,
@@ -16,16 +16,16 @@ const AdSchema = new mongoose.Schema({
 
   priceHistory: [mongoose.Schema.Types.Mixed],
 
-  price: Number,
-  floor: Number,
-  rooms: Number,
+  price: { type: Number, index: true },
+  floor: { type: Number, index: true },
+  rooms: { type: Number, index: true },
   meter: Number,
   entrance: String,
 
-  parking: Boolean,
-  elevator: Boolean,
+  parking: { type: Boolean, index: true },
+  elevator: { type: Boolean, index: true },
   balcony: Boolean,
-  renovated: Boolean,
+  renovated: { type: Boolean, index: true },
 
   neighborhood: String,
   street: String,
@@ -36,7 +36,7 @@ const AdSchema = new mongoose.Schema({
   phone: String,
 
   priceChanged: { type: Boolean, default: false },
-  isActive: { type: Boolean, default: true },
+  isActive: { type: Boolean, default: true, index: true },
   unActiveDate: Date,
 });
 

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Ad = require('./Ad');
 
 const FavoritesSchema = new mongoose.Schema({
-  userId: String,
+  userId: { type: String, index: true },
   favorites: Array,
 }, {
   timestamps: true,
