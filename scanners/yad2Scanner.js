@@ -1,3 +1,5 @@
+/* eslint no-await-in-loop: "off" */
+
 require('dotenv').config();
 
 const axios = require('axios');
@@ -44,7 +46,7 @@ async function getPage(page) {
       sort: 1,
       page,
       city: 1800,
-    })
+    }),
   );
 
   return res.data.data.feed_items;
