@@ -2,12 +2,11 @@
 /* eslint space-before-function-paren: "off" */
 
 const mongoose = require('mongoose');
-const moment = require('moment');
-
-const QUERY_COUNT = 20;
 
 const AdSchema = new mongoose.Schema({
   id: { type: String, required: true, index: { unique: true } },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 
   title: String,
   description: String,
@@ -36,42 +35,18 @@ const AdSchema = new mongoose.Schema({
   phone: String,
 
   priceChanged: { type: Boolean, default: false },
-  isRelevant: { type: Boolean, default: true },
-  new: { type: Boolean, default: true },
-  comment: String,
-}, { timestamps: true });
+  isActive: { type: Boolean, default: true },
+  unActiveDate: Date,
+});
 
-AdSchema.statics.get = async function(page) {
-  const ads = await this.find({})
-                        .skip(page * QUERY_COUNT)
-                        .limit(QUERY_COUNT)
-                        .sort('-updatedAt')
-                        .exec();
-  if (!ads) {
+
+AdSchema.statics.get = async function(homeId) {
+  const home = await this.findOne({ id: homeId }).exec();
+  if (!home) {
     return false;
   }
 
-  return ads;
-};
-
-AdSchema.statics.getAdsByDate = async function(date, filter = {}) {
-  const queryFilter = Object.assign(filter, {
-    updatedAt: {
-      $gte: moment(date),
-      $lt: moment(date).add(24, 'hours'),
-    },
-  });
-
-  console.log(queryFilter);
-  const ads = await this.find(queryFilter)
-                        .sort('-updatedAt')
-                        .exec();
-
-  if (!ads) {
-    return false;
-  }
-
-  return ads;
+  return home;
 };
 
 AdSchema.statics.add = async function(home) {
