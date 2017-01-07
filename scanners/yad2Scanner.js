@@ -141,7 +141,7 @@ async function parseAd(ad) {
   if (adDocument) {
     logger.info(`Ad ${ad.id} allready in DB`);
 
-    const adDetailsPrice = 0; // getPriceValue(adDetails);
+    const adDetailsPrice = getPriceValue(adDetails);
     if (adDocument.price !== adDetailsPrice) {
       logger.info(`Ad ${ad.id} price changed updating DB`);
 
