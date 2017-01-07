@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const mongoose = require('mongoose');
 
 exports.connect = () => {
@@ -6,17 +5,17 @@ exports.connect = () => {
   mongoose.connect(process.env.MONGODB_URI);
 
   mongoose.connection.on('open', () => {
-    console.log('%s Database connection established!', chalk.green('✓'));
+    console.log('✨  Database connection established!');
   });
 
   mongoose.connection.on('error', () => {
-    console.log('%s Database connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+    console.log('❗️  Database connection error. Please make sure MongoDB is running.');
     process.exit();
   });
 };
 
 exports.disconnect = () => {
   mongoose.connection.close(() => {
-    console.log('%s Database connection closed', chalk.yellow('⚡︎'));
+    console.log('⚡️  Database connection closed');
   });
 };
