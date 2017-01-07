@@ -44,7 +44,7 @@ async function scanActiveAds() {
 
 async function scanYad2ActiveAds() {
   logger.info('Starting Yad2 Active Ads scan');
-  console.log('🚀 Yad2 Active Ads scan started, for more info see log file');
+  console.log('🚀  Yad2 Active Ads scan started, for more info see log file');
 
   database.connect();
 
@@ -52,7 +52,7 @@ async function scanYad2ActiveAds() {
 
   database.disconnect();
 
-  console.log('👍 Yad2 Active Ads scan completed');
+  console.log('👍  Yad2 Active Ads scan completed');
   logger.info('Yad2 Active Ads scan completed');
 }
 
