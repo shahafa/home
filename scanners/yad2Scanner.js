@@ -178,7 +178,7 @@ async function scanAds() {
       const ad = page[i];
 
       if (ad.date) {
-        if (moment(ad.date).isBefore(lastScanTime)) {
+        if (moment(ad.date).isBefore(moment().startOf('day').toDate())) {
           logger.info(`Ad ${ad.id} date is before last scan time stoping scan. Ad Date: ${ad.date}`);
           continueToNextPage = false;
           break;
