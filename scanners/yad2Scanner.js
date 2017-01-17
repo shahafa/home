@@ -22,8 +22,6 @@ const logger = bunyan.createLogger({
   }],
 });
 
-let lastScanTime;
-
 async function getContactInfo(id) {
   const res = await axios.post(`${CONTACT_INFO_URL}${id}`);
 
@@ -143,7 +141,7 @@ async function parseAd(ad) {
 
     const adObject = getAdObject(ad, adDetails, contactInfo);
 
-    logger.info(`New ad found. Addding ad ${ad.id} to Database`);
+    logger.info(`New ad found (ad date: ${ad.date}). Addding ad ${ad.id} to Database`);
 
     await Ad.add(adObject);
   }
@@ -180,11 +178,11 @@ async function scanAds() {
 
 async function scanYad2() {
   logger.info('Yad2 scan started');
-  console.log('🚀  Yad2 scan started, for more info see log file');
+  console.log(`🚀  Yad2 scan started, for more info see log file. (Start time: ${moment().toDate()})`);
 
   database.connect();
 
-  lastScanTime = await Config.getYad2LastScanTime();
+  const lastScanTime = await Config.getYad2LastScanTime();
   await Config.setYad2LastScanTime(Date());
 
   logger.info(`Yad2 scan - last scan time: ${lastScanTime}`);
@@ -193,7 +191,7 @@ async function scanYad2() {
 
   database.disconnect();
 
-  console.log('👍  Yad2 scan completed');
+  console.log(`👍  Yad2 scan completed. (End time: ${moment().toDate()})`);
   logger.info('Yad2 scan completed');
 }
 
