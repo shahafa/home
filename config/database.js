@@ -9,7 +9,7 @@ exports.connect = () => {
     console.log('✨  Database connection established!');
   });
 
-  mongoose.connection.on('error', (er) => {
+  mongoose.connection.on('error', () => {
     console.log('❗️  Database connection error. Please make sure MongoDB is running.');
     process.exit();
   });
