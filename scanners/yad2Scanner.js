@@ -196,8 +196,3 @@ async function scanYad2() {
 }
 
 scanYad2();
-
-module.exports = {
-  getPriceValue,
-  getPriceObject,
-};

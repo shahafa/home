@@ -6,7 +6,6 @@ const axios = require('axios');
 const bunyan = require('bunyan');
 const database = require('../config/database');
 const Ad = require('../models/Ad');
-const { getPriceValue, getPriceObject } = require('./yad2Scanner');
 
 const AD_URL = 'https://app.yad2.co.il/api/v1.0/ad/ad.php?id=';
 const UNACTIVE_STATUS = '404';
@@ -18,6 +17,35 @@ const logger = bunyan.createLogger({
     path: `${process.env.LOG_FOLDER}/yad2ActiveAdsScanner.log`,
   }],
 });
+
+function getMediaValue(adDetails, key) {
+  if (!adDetails.media) return undefined;
+
+  if (!adDetails.media.params) return undefined;
+
+  return adDetails.media.params[key] ? adDetails.media.params[key] : undefined;
+}
+
+function getPriceValue(adDetails) {
+  const price = getMediaValue(adDetails, 'fromPrice');
+  if (price) {
+    return parseInt(price, 10);
+  }
+
+  return undefined;
+}
+
+function getPriceObject(adDetails) {
+  const price = getMediaValue(adDetails, 'fromPrice');
+  if (price) {
+    return {
+      price: parseInt(price, 10),
+      date: new Date().toISOString(),
+    };
+  }
+
+  return undefined;
+}
 
 async function scanActiveAds() {
   try {
