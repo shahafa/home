@@ -73,7 +73,7 @@ function getImportantInfoValue(adDetails, key) {
   return item ? item.value : undefined;
 }
 
-function getPriceValue(adDetails) {
+export function getPriceValue(adDetails) {
   const price = getMediaValue(adDetails, 'fromPrice');
   if (price) {
     return parseInt(price, 10);
@@ -82,7 +82,7 @@ function getPriceValue(adDetails) {
   return undefined;
 }
 
-function getPriceObject(adDetails) {
+export function getPriceObject(adDetails) {
   const price = getMediaValue(adDetails, 'fromPrice');
   if (price) {
     return {
@@ -134,27 +134,11 @@ async function parseAd(ad) {
     return;
   }
 
-  const adDetails = await getAd(ad.id);
-
-  // if ad found in db check if price changed
+  // if ad not found in db add it
   const adDocument = await Ad.get(adId);
-  if (adDocument) {
-    logger.info(`Ad ${ad.id} allready in DB`);
+  if (!adDocument) {
+    const adDetails = await getAd(ad.id);
 
-    const adDetailsPrice = getPriceValue(adDetails);
-    if (adDocument.price !== adDetailsPrice) {
-      logger.info(`Ad ${ad.id} price changed from ${adDocument.price} to ${adDetailsPrice}, updating DB`);
-
-      adDocument.updatedAt = Date.now();
-      adDocument.price = adDetailsPrice;
-      adDocument.priceHistory.push(getPriceObject(adDetails));
-      adDocument.priceChanged = true;
-      adDocument.isRelevant = true;
-      adDocument.adIsActive = true;
-
-      await adDocument.save();
-    }
-  } else {
     const contactInfo = await getContactInfo(ad.id);
 
     const adObject = getAdObject(ad, adDetails, contactInfo);

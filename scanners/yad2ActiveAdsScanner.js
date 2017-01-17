@@ -6,6 +6,7 @@ const axios = require('axios');
 const bunyan = require('bunyan');
 const database = require('../config/database');
 const Ad = require('../models/Ad');
+const { getPriceValue, getPriceObject } = require('./yad2Scanner');
 
 const AD_URL = 'https://app.yad2.co.il/api/v1.0/ad/ad.php?id=';
 const UNACTIVE_STATUS = '404';
@@ -32,6 +33,22 @@ async function scanActiveAds() {
           adDocument.isActive = false;
           adDocument.unActiveDate = Date.now();
           await adDocument.save();
+        } else {
+          // if ad exists check for price change
+          const adDetails = res.data.data;
+          const adDetailsPrice = getPriceValue(adDetails);
+          if (adDocument.price !== adDetailsPrice) {
+            logger.info(`Ad ${adDocument.id} price changed from ${adDocument.price} to ${adDetailsPrice}, updating DB`);
+
+            adDocument.updatedAt = Date.now();
+            adDocument.price = adDetailsPrice;
+            adDocument.priceHistory.push(getPriceObject(adDetails));
+            adDocument.priceChanged = true;
+            adDocument.isRelevant = true;
+            adDocument.adIsActive = true;
+
+            await adDocument.save();
+          }
         }
       } catch (err) {
         logger.error(`Failed to scan active ad ${adDocument.id} (error: ${err})`);
