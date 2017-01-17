@@ -73,7 +73,7 @@ function getImportantInfoValue(adDetails, key) {
   return item ? item.value : undefined;
 }
 
-export function getPriceValue(adDetails) {
+function getPriceValue(adDetails) {
   const price = getMediaValue(adDetails, 'fromPrice');
   if (price) {
     return parseInt(price, 10);
@@ -82,7 +82,7 @@ export function getPriceValue(adDetails) {
   return undefined;
 }
 
-export function getPriceObject(adDetails) {
+function getPriceObject(adDetails) {
   const price = getMediaValue(adDetails, 'fromPrice');
   if (price) {
     return {
@@ -198,3 +198,8 @@ async function scanYad2() {
 }
 
 scanYad2();
+
+module.exports = {
+  getPriceValue,
+  getPriceObject,
+};
