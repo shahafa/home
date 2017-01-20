@@ -4,6 +4,7 @@
 const mongoose = require('mongoose');
 
 const FilterSchema = new mongoose.Schema({
+  neighborhood: String,
   fromRooms: Number,
   toRooms: Number,
   fromFloor: Number,

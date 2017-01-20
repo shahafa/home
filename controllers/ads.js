@@ -29,6 +29,10 @@ function buildFilterQuery(filter) {
     queryFilter.price = { $gte: filter.fromPrice, $lte: filter.toPrice };
   }
 
+  if (filter.neighborhood) {
+    queryFilter.neighborhood = filter.neighborhood;
+  }
+
   if (filter.renovated) {
     queryFilter.renovated = true;
   }
