@@ -75,6 +75,26 @@ async function getAds(req, res) {
   });
 }
 
+async function getNeighborhoods(req, res) {
+  const neighborhoods = await Ad.aggregate(
+    {
+      $facet: {
+        neighborhoods: [
+          { $unwind: '$neighborhood' },
+          { $sortByCount: '$neighborhood' },
+        ],
+      },
+    });
+
+  return res.json({
+    status: 'success',
+    data: {
+      neighborhoods,
+    },
+  });
+}
+
 module.exports = {
   getAds,
+  getNeighborhoods,
 };
