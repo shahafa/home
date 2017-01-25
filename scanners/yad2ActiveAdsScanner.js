@@ -35,8 +35,6 @@ async function getTotalPages() {
 }
 
 async function getPage(page) {
-  logger.info(`Downloading page ${page}.`);
-
   const res = await axios.post(FEED_URL,
     querystring.stringify({
       cat: 2,
