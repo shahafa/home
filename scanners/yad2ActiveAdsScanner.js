@@ -65,7 +65,7 @@ function getPriceObject(price) {
 }
 
 async function scanAds() {
-  let pageNumber = 186;
+  let pageNumber = 0;
   const totalPages = await getTotalPages();
   const ads = {};
 
@@ -73,7 +73,7 @@ async function scanAds() {
     pageNumber += 1;
 
     const page = await getPage(pageNumber);
-    console.log('page: ' + pageNumber);
+    logger.info(`Downloading page ${pageNumber}/${totalPages}`);
 
     for (let i = 0; i < page.length; i += 1) {
       const ad = page[i];
