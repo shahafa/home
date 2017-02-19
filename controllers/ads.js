@@ -79,6 +79,18 @@ async function getAds(req, res) {
   });
 }
 
+async function searchAds(req, res) {
+  const query = req.body.query;
+  const ads = await Ad.getAds(query);
+
+  return res.json({
+    status: 'success',
+    data: {
+      ads,
+    },
+  });
+}
+
 async function getNeighborhoods(req, res) {
   const neighborhoods = await Ad.aggregate(
     {
@@ -100,5 +112,6 @@ async function getNeighborhoods(req, res) {
 
 module.exports = {
   getAds,
+  searchAds,
   getNeighborhoods,
 };

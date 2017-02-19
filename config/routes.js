@@ -12,6 +12,8 @@ const authenticate = jwt({
 
 function routesConfig(app) {
   app.use('/api/getApartments', authenticate, adsController.getAds);
+  app.use('/api/searchApartments', authenticate, adsController.searchAds);
+
   app.use('/api/getNeighborhoods', authenticate, adsController.getNeighborhoods);
 
   app.use('/api/addFilter', authenticate, filterController.addFilter);

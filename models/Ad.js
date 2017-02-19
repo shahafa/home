@@ -50,6 +50,23 @@ AdSchema.statics.get = async function(homeId) {
   return home;
 };
 
+AdSchema.index({ '$**': 'text' });
+
+AdSchema.statics.getAds = async function(searchQuery) {
+  const query = searchQuery === '' ? {} : { $text: { $search: `"${searchQuery}"` } };
+
+  const ads = await this.find(query)
+                        .limit(250)
+                        .sort('-updatedAt')
+                        .exec();
+
+  if (!ads) {
+    return false;
+  }
+
+  return ads;
+};
+
 AdSchema.statics.getAdsByDate = async function(date, filter = {}) {
   const queryFilter = Object.assign(filter, {
     updatedAt: {
