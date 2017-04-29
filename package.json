@@ -4,8 +4,8 @@
   "description": "Home API",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon --harmony-async-await app.js",
-    "start": "node --harmony-async-await app.js",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
     "test": "jest",
     "lint": "./node_modules/eslint/bin/eslint.js ."
   },
